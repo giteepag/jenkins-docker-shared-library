@@ -1,0 +1,26 @@
+pipeline {
+  agent {
+    docker { 
+    image 'aws-pip1' 
+    args '-u root -v /home/prashant/.aws:/root/.aws:ro --network="host"'
+    }
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'pip install -r requirements.txt'
+      }
+    }
+    stage('Test'){
+      steps {
+        echo 'Test Stage executed'
+      }
+    }
+    stage('Acceptance-Deploy') {
+      steps {
+	cd
+      	./cfn-create-update.sh 
+      }
+    }
+  }
+}
